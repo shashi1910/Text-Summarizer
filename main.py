@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog as fd
 from transformers import pipeline
+import pdf_extract as pd
 
 
 def split_text(text, max_length):
@@ -34,13 +35,38 @@ root.title("Hugging face based Summarizer")
 
 input_label = tk.Label(root, text="Paste article:")
 input_label.pack()
-
 input_text = tk.Text(root)
 input_text.pack()
 
-button = tk.Button(root, text="Summarize", command=summarize)
-button.pack()
-button['cursor'] = 'cross'
+#Button Canvas
+button_can = tk.Canvas(root)
+button_can.pack()
+
+#______PdfSelction_Button___________
+def inserttext() :
+    pdf_text = pd.select_file()
+    global input_text
+    input_text.insert(tk.END,pdf_text)
+    
+
+
+button_pdf= tk.Button(button_can, text="Select Pdf",width=20, command=inserttext)
+button_pdf.grid(row=0,column=0,sticky='W',padx=30)
+button_pdf['cursor'] = 'cross'
+
+#______Summarize_Button___________
+button_Summarize = tk.Button(button_can, text="Summarize",width=20, command=summarize)
+button_Summarize.grid(row=0,column=1,padx=30)
+button_Summarize['cursor'] = 'cross'
+
+#______Clear_Button___________
+def clear_inputtext() :
+    input_text.delete("1.0", tk.END)
+    result_text.delete("1.0", tk.END)
+
+button_clear = tk.Button(button_can, text="Clear",width=20, command=clear_inputtext)
+button_clear.grid(row=0,column=3,padx=30,sticky='E')
+button_clear['cursor'] = 'cross'
 
 result_label = tk.Label(root, text="Summary:")
 result_label.pack()
